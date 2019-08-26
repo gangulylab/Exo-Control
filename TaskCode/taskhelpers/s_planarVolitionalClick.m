@@ -1,5 +1,6 @@
 % s_planarVolitionalClick
 %% Go to reach target
+global Cursor
 % Enable planar into velocity control mode for reach from home to target
 Params.Arduino.planar.enable            = 1;    % 1-bit     Move to target, or accept sent velocities
 Params.Arduino.planar.velocityMode      = 1;    % 1-bit     Move to target, or accept sent velocities
@@ -102,11 +103,8 @@ if ~Data.ErrorID,
                 ct = ct + 1;
             end
             CursorRect = Params.CursorRect;
-            
-            x = Cursor.State(1)*cosd(Params.MvmtAxisAngle);
-            y = Cursor.State(1)*sind(Params.MvmtAxisAngle);
-            CursorRect([1,3]) = CursorRect([1,3]) + x + Params.Center(1); % add x-pos
-            CursorRect([2,4]) = CursorRect([2,4]) + y + Params.Center(2); % add y-pos
+            CursorRect([1,3]) = CursorRect([1,3]) + Cursor.State(1) + Params.Center(1); % add x-pos
+            CursorRect([2,4]) = CursorRect([2,4]) + Cursor.State(2) + Params.Center(2); % add y-pos
             Data.CursorState(:,end+1) = Cursor.State;
             Data.PlanarState(:,end+1) = Params.Arduino.planar.pos(1);
             Data.IntendedCursorState(:,end+1) = Cursor.IntendedState;
@@ -115,10 +113,17 @@ if ~Data.ErrorID,
             
             % reach target
             ReachRect = Params.TargetRect; % centered at (0,0)
-            x = ReachTargetPos*cosd(Params.MvmtAxisAngle);
-            y = ReachTargetPos*sind(Params.MvmtAxisAngle);
-            ReachRect([1,3]) = ReachRect([1,3]) + x + Params.Center(1); % add x-pos
-            ReachRect([2,4]) = ReachRect([2,4]) + y + Params.Center(2); % add y-pos
+            ReachRect([1,3]) = ReachRect([1,3]) + ReachTargetPos(1) + Params.Center(1); % add x-pos
+            ReachRect([2,4]) = ReachRect([2,4]) + ReachTargetPos(2) + Params.Center(2); % add y-pos
+           
+            
+                    
+            % reach target
+%             ReachRect = Params.TargetRect; % centered at (0,0)
+%             x = ReachTargetPos*cosd(Params.MvmtAxisAngle);
+%             y = ReachTargetPos*sind(Params.MvmtAxisAngle);
+%             ReachRect([1,3]) = ReachRect([1,3]) + x + Params.Center(1); % add x-pos
+%             ReachRect([2,4]) = ReachRect([2,4]) + y + Params.Center(2); % add y-pos
             
             %             switch Params.Arduino.planar.usePlanarAsCursor
             %                 case 0
@@ -137,6 +142,11 @@ if ~Data.ErrorID,
                 CursorCol = Params.CursorColor;
             end
             
+%             
+%                     Screen('FillOval', Params.WPTR, ...
+%                         cat(1,Params.OutTargetColor,CursorCol)', ...
+%                         cat(1,ReachRect,CursorRect)')
+%             
             
             switch Params.Arduino.planar.target
                 case 0
@@ -165,8 +175,8 @@ if ~Data.ErrorID,
                 VelRect([2,4]) = VelRect([2,4]) + Params.Center(2);
                 x0 = mean(VelRect([1,3]));
                 y0 = mean(VelRect([2,4]));
-                xf = x0 + 0.1*Cursor.Vcommand*cosd(Params.MvmtAxisAngle);
-                yf = y0 + 0.1*Cursor.Vcommand*sind(Params.MvmtAxisAngle);
+                xf = x0 + 0.1*Cursor.Vcommand(1);
+                yf = y0 + 0.1*Cursor.Vcommand(2);
                 Screen('FrameOval', Params.WPTR, [100,100,100], VelRect);
                 Screen('DrawLine', Params.WPTR, [100,100,100], x0, y0, xf, yf, 3);
             end

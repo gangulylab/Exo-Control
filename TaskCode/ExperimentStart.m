@@ -55,9 +55,9 @@ switch Params.PlanarConnected
     case 0
         Params.Arduino.devBBS = nan;
     case 1
-%         Params.ArduinoPtr = arduino('COM41','Due','Libraries','I2C');   % Planar Laptop
-%             Params.ArduinoPtr = arduino('COM9','Due','Libraries','I2C');  % Rob's Laptop
-            Params.ArduinoPtr = arduino('/dev/ttyACM0','Due','Libraries','I2C');
+        % Params.ArduinoPtr = arduino('COM41','Due','Libraries','I2C');   % Planar Laptop
+        % Params.ArduinoPtr = arduino('COM9','Due','Libraries','I2C');  % Rob's Laptop
+        Params.ArduinoPtr = arduino('/dev/ttyACM0','Due','Libraries','I2C');
         Params.ArduinoPin = 'D13';
         writeDigitalPin(Params.ArduinoPtr, Params.ArduinoPin, 0); % make sure the pin is at 0
         PulseArduino(Params.ArduinoPtr,Params.ArduinoPin,20);
@@ -272,6 +272,13 @@ try
     if Params.NumFixedBlocks>0,
         [Neuro,KF,Params,Clicker] = RunTask(Params,Neuro,3,KF,Clicker);
     end
+    
+    
+    % Save persistence folder with Data
+    %mkdir(fullfile(Params.Datadir,'persistence'))
+    %copyfile(fullfile(Params.ProjectDir,'TaskCode','persistence','kf_params.mat'),...
+     %   fullfile(Params.Datadir,'persistence','kf_params.mat'));
+    
     
     % Pause and Finish!
     ExperimentStop([],Params);

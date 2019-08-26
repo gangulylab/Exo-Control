@@ -8,7 +8,7 @@ function Params = GetParams(Params)
 Params.Verbose = true;
 
 %% Experiment
-Params.Task = 'Exo-Control-1D';
+Params.Task = 'Exo-Control';
 switch Params.ControlMode,
     case 1, Params.ControlModeStr = 'MousePosition';
     case 2, Params.ControlModeStr = 'MouseVelocity';
@@ -17,13 +17,13 @@ switch Params.ControlMode,
 end
 
 %% Control
-Params.Gain             = 8;
+Params.Gain             = 1; %8;
 Params.CenterReset      = false;    
-Params.Assistance       = 0.0;      % value btw 0 and 1, 1 full assist
+Params.Assistance       = 0;      % value btw 0 and 1, 1 full assist
 Params.CLDA.Type        = 3;        % 0-none, 1-refit, 2-smooth batch, 3-RML
-Params.CLDA.AdaptType   = 'none';   % {'none','linear'}, affects assistance & lambda for rml
+Params.CLDA.AdaptType   = 'linear';   % {'none','linear'}, affects assistance & lambda for rml
 Params.InitializationMode =4;      % 1-imagined mvmts, 2-shuffled imagined mvmts, 3-choose dir, 4-most recent KF
-Params.MvmtAxisAngle    = 0;        
+%Params.MvmtAxisAngle    = 0;        
 Params.BaselineTime     = 0;        % secs
 
 %% Cursor Click
@@ -44,16 +44,16 @@ if strcmpi(Params.Subject,'Test'),
 end
 
 if IsWin,
-    %projectdir = 'D:\new_planar\Exo-Control-1D';
-%      projectdir ='C:\Users\test\Documents\GitHub\Exo-Control-1D\';
-%     projectdir = 'C:\new_planar\Exo-Control-1D-Plus-Clicker\Exo-Control-1D';
-    projectdir = 'D:\ganguly_planar\Exo-Control-1D\';
+    %projectdir = 'D:\new_planar\Exo-Control';
+      projectdir ='C:\Users\test\Documents\GitHub\Exo-Control\';
+%     projectdir = 'C:\new_planar\Exo-Control';
+%    projectdir = 'D:\ganguly_planar\Exo-Control\';
 
 elseif IsOSX,
-    projectdir = '/Users/daniel/Projects/Exo-Control-1D/';
+    projectdir = '/Users/daniel/Projects/Exo-Control/';
 else,
-%     projectdir = '~/Projects/GangulyLab/Exo-Control-1D/';
-    projectdir = '~/Projects/Exo-Control-1D/';
+%     projectdir = '~/Projects/GangulyLab/Exo-Control/';
+    projectdir = '~/Projects/Exo-Control/';
     butter(1,[.1,.5]);
 end
 addpath(genpath(fullfile(projectdir,'TaskCode')));
@@ -68,10 +68,10 @@ Params.SerialSync = false;
 Params.SyncDev = '/dev/ttyS1';
 Params.BaudRate = 115200;
 
-Params.ArduinoSync = true;
+Params.ArduinoSync = false;
 
 %%
-Params.PlanarConnected          = 1;    % is the planar hardware connected? 
+Params.PlanarConnected          = 0;    % is the planar hardware connected? 
 Params.skipSync                 = 0;    % Do you want to skip the VSync tests?
 % Params.GenNeuralFeaturesFlag    = true; % 
 
@@ -80,20 +80,23 @@ Params.ScreenRefreshRate = 5; % Hz
 Params.UpdateRate = 5; %10 = Imagined; 5 = control % Hz
 
 %% Targets
-Params.TargetSize = 50;
+Params.TargetSize = 30;
 Params.OutTargetColor = [55,255,0];
 Params.InTargetColor = [255,55,0];
 
-Params.StartTargetPosition  = 0;
+Params.StartTargetPosition  = [0,0];
 Params.TargetRect = ...
     [-Params.TargetSize -Params.TargetSize +Params.TargetSize +Params.TargetSize];
 
-Params.ReachTargetRadius = 100;
-% Params.ReachTargetPositions = Params.StartTargetPosition + ...
-%     [-Params.ReachTargetRadius; +Params.ReachTargetRadius]; % left and right
-Params.ReachTargetPositions = Params.StartTargetPosition + ...
-    [-Params.ReachTargetRadius]; % only left
-Params.NumReachTargets = length(Params.ReachTargetPositions);
+Params.ReachTargetAngles = (0:45:315)';
+Params.ReachTargetRadius = 200;
+Params.ReachTargetPositions = ...
+    Params.StartTargetPosition ...
+    + Params.ReachTargetRadius ...
+    * [cosd(Params.ReachTargetAngles) sind(Params.ReachTargetAngles)];
+
+Params.NumReachTargets = length(Params.ReachTargetAngles);
+
 
 %% Cursor
 Params.CursorColor = [95, 6, 150];
@@ -102,20 +105,24 @@ Params.CursorRect = [-Params.CursorSize -Params.CursorSize ...
     +Params.CursorSize +Params.CursorSize];
 
 %% Kalman Filter Properties
-a = 0.85;%0.825;
+a = 0.825; % 0.85;%0.825;
 w = 150;
 G = Params.Gain;
 t = 1/Params.UpdateRate;
 if Params.ControlMode>=3,
     Params.KF.A = [...
-        1	G*t	0;
-        0	a	0;
-        0	0	1];
+        1	0	G*t	0	0;
+        0	1	0	G*t	0;
+        0	0	a	0	0;
+        0	0	0	a	0;
+        0	0	0	0	1];
     Params.KF.W = [...
-        0	0	0;
-        0	w	0;
-        0	0	0];
-    Params.KF.P = eye(3);
+        0	0	0	0	0;
+        0	0	0	0	0;
+        0	0	w	0	0;
+        0	0	0	w	0;
+        0	0	0	0	0];
+    Params.KF.P = eye(5);
     Params.KF.InitializationMode = Params.InitializationMode; % 1-imagined mvmts, 2-shuffled
     if Params.ControlMode==4, % set velocity kalman filter flag
         Params.KF.VelKF = true;
@@ -130,9 +137,9 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 1;
-Params.NumFixedBlocks       = 0;
-Params.NumTrialsPerBlock    = 2;
+Params.NumAdaptBlocks       = 0;
+Params.NumFixedBlocks       = 1;
+Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random
 switch Params.TargetSelectionFlag,
     case 1, Params.TargetFunc = @(n) mod(randperm(n),Params.NumReachTargets)+1;
@@ -175,9 +182,9 @@ end
 
 %% Hold Times
 Params.TargetHoldTime = 4;
-Params.InterTrialInterval = 1;
+Params.InterTrialInterval = 5;
 Params.InstructedGraspTime = 8;
-Params.InstructedDelayTime = 0.1;
+Params.InstructedDelayTime = 10;
 Params.MaxStartTime = 20;
 Params.MaxReachTime = 30;
 Params.InterBlockInterval = 10; % 0-10s, if set to 10 use instruction screen
@@ -193,7 +200,7 @@ Params.ErrorSoundFs = 8192;
 sound(0*Params.ErrorSound,Params.ErrorSoundFs)
 
 %% BlackRock Params
-Params.GenNeuralFeaturesFlag = false;
+Params.GenNeuralFeaturesFlag =true;
 Params.ZscoreRawFlag = true;
 Params.UpdateChStatsFlag = false;
 Params.ZscoreFeaturesFlag = true;

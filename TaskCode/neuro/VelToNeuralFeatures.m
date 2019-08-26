@@ -20,7 +20,7 @@ function varargout = VelToNeuralFeatures(Params,Data,noise,PLOT)
 % ---------User Input---------------------
 
 % inputs
-if ~exist('noise','var'), noise=100; end
+if ~exist('noise','var'), noise=50; end
 if ~exist('PLOT','var'), PLOT = 0; end
 
 % compute velocities

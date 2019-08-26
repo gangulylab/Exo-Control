@@ -12,7 +12,6 @@ DataFields = struct(...
     'TrialStartTime',NaN,...
     'TrialEndTime',NaN,...
     'TargetID',NaN,...
-    'MvmtAxisAngle',NaN,...
     'TargetPosition',NaN,...
     'Time',[],...
     'CursorAssist',[],...
@@ -51,10 +50,11 @@ for Block=1:NumBlocks, % Block Loop
 
     % random order of reach targets for each block
     TargetOrder = Params.TargetFunc(Params.NumTrialsPerBlock);
-    Cursor.State = [0,0,1]';
+    disp(TargetOrder)
+    Cursor.State = [0,0,0,0,1]';
     Cursor.ClickState=0;
-    Cursor.IntendedState = [0,0,1]';
-    Cursor.Vcommand = [0]';
+    Cursor.IntendedState = [0,0,0,0,1]';
+    Cursor.Vcommand = [0,0]';
 
     for TrialPerBlock=1:Params.NumTrialsPerBlock, % Trial Loop
         % if smooth batch on & enough time has passed, update KF btw trials
@@ -94,8 +94,9 @@ for Block=1:NumBlocks, % Block Loop
         TrialData.Block = Block;
         TrialData.Trial = Trial;
         TrialData.TargetID = TrialIdx;
-        TrialData.MvmtAxisAngle = Params.MvmtAxisAngle;
-        TrialData.TargetPosition = Params.ReachTargetPositions(TrialIdx);
+        %TrialData.MvmtAxisAngle = Params.MvmtAxisAngle;
+        TrialData.TargetPosition = Params.ReachTargetPositions(TrialIdx,:);
+                
         TrialData.KalmanFilter = KF;
         TrialData.ChStats = Neuro.ChStats;
         TrialData.FeatureStats = Neuro.FeatureStats;

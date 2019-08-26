@@ -85,8 +85,8 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
                 ct = ct + 1;
             end
             CursorRect = Params.CursorRect;
-            x = Cursor.State(1)*cosd(Params.MvmtAxisAngle);
-            y = Cursor.State(1)*sind(Params.MvmtAxisAngle);
+            x = Cursor.State(1);
+            y = Cursor.State(2);
             CursorRect([1,3]) = CursorRect([1,3]) + x + Params.Center(1); % add x-pos
             CursorRect([2,4]) = CursorRect([2,4]) + y + Params.Center(2); % add y-pos
             Data.CursorState(:,end+1) = Cursor.State;
@@ -96,8 +96,8 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
             Data.ClickerState(1,end+1) = Cursor.ClickState;
             % start target
             StartRect = Params.TargetRect; % centered at (0,0)
-            x = StartTargetPos*cosd(Params.MvmtAxisAngle);
-            y = StartTargetPos*sind(Params.MvmtAxisAngle);
+            x = StartTargetPos(1);
+            y = StartTargetPos(2);
             StartRect([1,3]) = StartRect([1,3]) + x + Params.Center(1); % add x-pos
             StartRect([2,4]) = StartRect([2,4]) + y + Params.Center(2); % add y-pos
 
@@ -112,8 +112,8 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
 
             % reach target
             ReachRect = Params.TargetRect; % centered at (0,0)
-            x = ReachTargetPos*cosd(Params.MvmtAxisAngle);
-            y = ReachTargetPos*sind(Params.MvmtAxisAngle);
+            x = ReachTargetPos(1);
+            y = ReachTargetPos(2);
             ReachRect([1,3]) = ReachRect([1,3]) + x + Params.Center(1); % add x-pos
             ReachRect([2,4]) = ReachRect([2,4]) + y + Params.Center(2); % add y-pos
             ReachCol = Params.OutTargetColor;
@@ -144,8 +144,8 @@ if ~Data.ErrorID && Params.InstructedDelayTime>0,
                 VelRect([2,4]) = VelRect([2,4]) + Params.Center(2);
                 x0 = mean(VelRect([1,3]));
                 y0 = mean(VelRect([2,4]));
-                xf = x0 + 0.1*Cursor.Vcommand*cosd(Params.MvmtAxisAngle);
-                yf = y0 + 0.1*Cursor.Vcommand*sind(Params.MvmtAxisAngle);
+                xf = x0 + 0.1*Cursor.Vcommand(1);
+                yf = y0 + 0.1*Cursor.Vcommand(2);
                 Screen('FrameOval', Params.WPTR, [100,100,100], VelRect);
                 Screen('DrawLine', Params.WPTR, [100,100,100], x0, y0, xf, yf, 3);
             end

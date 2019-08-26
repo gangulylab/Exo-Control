@@ -2,26 +2,27 @@
 % Volitional reach, auto-grasp, volitional return, auto release
 
 % Move Planar system to the home position then disable it.
-Params.Arduino.planar.target        = 0;    % 1-bit     Move to Home
+Params.Arduino.planar.target        = 0;    % 1-bit     Move to Home postion
 Params.Arduino.glove.enable         = 1;    % 1-bit     Enable Glove
 Params.Arduino.glove.admittanceMode = 1;    % 1-bit     Set glove to admittance mode to reduce strain in hand
+
 s_planarForceState;
 
 % Offer tempoary respite between trials
 s_interTrialInterval;
 
-% Instruct to go to reach target
-idx = Data.TargetID;
+% Instruct to go to reach target or return to the center
+idx = Data.TargetID; % idx=0 means center target; otherwise center-out targets
+disp(idx)
+
 switch idx
-    case 0
+    case 0 % for returning to the center target (home position)
         Params.Arduino.planar.target           = 0;
-    case 1 % Left Target
-        Params.Arduino.planar.target           = 5; % Go West
-    case 2 % Right Target
-        Params.Arduino.planar.target           = 1; % Go East
-    otherwise
-        Params.Arduino.planar.target           = 0;
+
+    otherwise % for moving towards target positions around the circle
+        Params.Arduino.planar.target           = 1;
 end
+
 s_planarInstructTarget;
 Params.successfulReach = 0;
 
@@ -44,7 +45,7 @@ if Params.successfulReach == 1
 end
 
 
-% Instruct to go Home
+% Instruct to go Home position (center target)
 Params.Arduino.planar.target = 0;
 s_planarInstructTarget;
 Params.successfulReach = 0;

@@ -12,16 +12,17 @@ global Cursor
 %% Set up trial
 StartTargetPos = Params.StartTargetPosition;
 ReachTargetPos = Data.TargetPosition;
-
+disp(ReachTargetPos)
 % Output to Command Line
 fprintf('\nTrial: %i\n',Data.Trial)
-fprintf('  Target: %i\n',Data.TargetPosition)
+fprintf('  Target x Coordination: %i\n',Data.TargetPosition(1))
+fprintf('  Target y Coordination: %i\n',Data.TargetPosition(2))
 if Params.Verbose,
     if TaskFlag==2,
         fprintf('    Cursor Assistance: %i%%\n',round(100*Cursor.Assistance))
         if Params.CLDA.Type==3,
-            %fprintf('    Lambda 1/2 life: %.2fsecs\n',log(.5)/log(KF.Lambda)/Params.UpdateRate)
-            %fprintf('    Lambda 1/2 life: %.2fsecs\n',KF.Lambda)
+            fprintf('    Lambda 1/2 life: %.2fsecs\n',log(.5)/log(KF.Lambda)/Params.UpdateRate)
+            fprintf('    Lambda 1/2 life: %.2fsecs\n',KF.Lambda)
         end
     end
 end
@@ -84,6 +85,8 @@ if Data.ErrorID==0,
 else
     % reset cursor
     Cursor.ClickState = 0;
+    %Cursor.State = [0,0,0,0,1]';
+    %Cursor.IntendedState = [0,0,0,0,1]';
     
     fprintf('ERROR: %s\n', Data.ErrorStr)
 

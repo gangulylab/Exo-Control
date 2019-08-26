@@ -76,8 +76,8 @@ if ~Data.ErrorID && Params.InterTrialInterval>0,
             Data.ClickerState(1,end+1) = Cursor.ClickState;
             
             CursorRect = Params.CursorRect;
-            x = Cursor.State(1)*cosd(Params.MvmtAxisAngle);
-            y = Cursor.State(1)*sind(Params.MvmtAxisAngle);
+            x = Cursor.State(1);
+            y = Cursor.State(2);
             CursorRect([1,3]) = CursorRect([1,3]) + x + Params.Center(1); % add x-pos
             CursorRect([2,4]) = CursorRect([2,4]) + y + Params.Center(2); % add y-pos
             Screen('FillOval', Params.WPTR, ...
