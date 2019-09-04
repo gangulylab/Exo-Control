@@ -55,9 +55,9 @@ switch Params.PlanarConnected
     case 0
         Params.Arduino.devBBS = nan;
     case 1
-        % Params.ArduinoPtr = arduino('COM41','Due','Libraries','I2C');   % Planar Laptop
-        % Params.ArduinoPtr = arduino('COM9','Due','Libraries','I2C');  % Rob's Laptop
-        Params.ArduinoPtr = arduino('/dev/ttyACM0','Due','Libraries','I2C');
+        Params.ArduinoPtr = arduino('COM41','Due','Libraries','I2C');   % Planar Laptop
+%         Params.ArduinoPtr = arduino('COM9','Due','Libraries','I2C');  % Rob's Laptop
+%         Params.ArduinoPtr = arduino('/dev/ttyACM0','Due','Libraries','I2C');
         Params.ArduinoPin = 'D13';
         writeDigitalPin(Params.ArduinoPtr, Params.ArduinoPin, 0); % make sure the pin is at 0
         PulseArduino(Params.ArduinoPtr,Params.ArduinoPin,20);
@@ -72,11 +72,11 @@ end
                                                             ./(Params.Arduino.planar.velParams.maxSpeed-Params.Arduino.planar.velParams.minSpeed))...
                                                             .*(2^Params.Arduino.planar.velParams.bits-1));
 
-	Params.Arduino.planar.posParams.screenResolution  = [1920,1080];  % Fancy B1 Monitor
+% 	Params.Arduino.planar.posParams.screenResolution  = [1920,1080];  % Fancy B1 Monitor
 % 	Params.Arduino.planar.posParams.screenResolution  = [1680,1050];  % Monitor in 133SDH
 % 	Params.Arduino.planar.posParams.screenResolution  = [2880,1620];  % Rob's laptop
 % 	Params.Arduino.planar.posParams.screenResolution  = [1920,1200];  % Leeann/Star Monitor in 133SDH
-% 	Params.Arduino.planar.posParams.screenResolution  = [1600,900];   % Labtop
+	Params.Arduino.planar.posParams.screenResolution  = [1600,900];   % Labtop
     Params.Arduino.planar.posParams.planarBounds      = [-300,300,-10,300];   % mm
     Params.Arduino.planar.posParams.planarPlotLoc     = [Params.Arduino.planar.posParams.screenResolution(1)/2,...
                                                             Params.Arduino.planar.posParams.screenResolution(2)/2+...
@@ -97,6 +97,7 @@ end
     Params.Arduino.planar.target                = 0;    % 4-bits    For 16 preset targets
     Params.Arduino.planar.vel   = [0;0];
     
+    Params.Arduino.planar.yOffset               = 150;
     
     Params.Arduino.glove.enable                = 0;    % 1-bit     Turn planar off and on
     Params.Arduino.glove.admittanceMode        = 0;    % 1-bit     Move to target, or accept sent velocities

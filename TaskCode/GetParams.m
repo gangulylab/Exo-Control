@@ -44,9 +44,10 @@ end
 
 if IsWin,
     %projectdir = 'D:\new_planar\Exo-Control';
-      projectdir ='C:\Users\test\Documents\GitHub\Exo-Control\';
-%     projectdir = 'C:\new_planar\Exo-Control';
+%    projectdir ='C:\Users\test\Documents\GitHub\Exo-Control\';
+%    projectdir = 'C:\new_planar\Exo-Control';
 %    projectdir = 'D:\ganguly_planar\Exo-Control\';
+   projectdir = 'D:\2DPlanar\Exo-Control\';
 
 elseif IsOSX,
     projectdir = '/Users/daniel/Projects/Exo-Control/';
@@ -88,7 +89,7 @@ Params.TargetRect = ...
     [-Params.TargetSize -Params.TargetSize +Params.TargetSize +Params.TargetSize];
 
 Params.ReachTargetAngles = (0:45:315)';
-Params.ReachTargetRadius = 200;
+Params.ReachTargetRadius = 100;
 Params.ReachTargetPositions = ...
     Params.StartTargetPosition ...
     + Params.ReachTargetRadius ...
@@ -136,8 +137,8 @@ Params.DrawVelCommand.Rect = [-425,-425,-350,-350];
 
 %% Trial and Block Types
 Params.NumImaginedBlocks    = 0;
-Params.NumAdaptBlocks       = 1;
-Params.NumFixedBlocks       = 0;
+Params.NumAdaptBlocks       = 0;
+Params.NumFixedBlocks       = 1;
 Params.NumTrialsPerBlock    = length(Params.ReachTargetAngles);
 Params.TargetSelectionFlag  = 1; % 1-pseudorandom, 2-random
 switch Params.TargetSelectionFlag,

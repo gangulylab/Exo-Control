@@ -224,4 +224,5 @@ end % only complete if no errors
 switch Params.PlanarConnected 
     case 0    
         Params.Arduino.planar.pos(1) = Cursor.State(1);
+        Params.Arduino.planar.pos(2) = -Cursor.State(2);
 end

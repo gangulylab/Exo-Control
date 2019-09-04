@@ -98,8 +98,8 @@ switch Cursor.ControlMode,
         
         % bound at 100
         speed = norm([Vass(1),Vass(2)]);
-        if speed>100,
-            Vass = Vass * 100 / speed;
+        if speed>50,
+            Vass = Vass * 50 / speed;
         end
         
         % update cursor state
@@ -200,7 +200,7 @@ catch,
 end
 
 % write to arduino to exo
-Params.Arduino.planar.vel = [Cursor.Vcommand];
+Params.Arduino.planar.vel = [Cursor.Vcommand(1);-Cursor.Vcommand(2)];
 Params.Arduino = UpdateArduino(Params.Arduino);
 
 % Cursor position is updated using feedback from planar position

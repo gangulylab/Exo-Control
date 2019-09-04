@@ -102,11 +102,11 @@ switch Params.PlanarConnected
                     
                     % cursor
                     
-                    CursorRect = Params.CursorRect;
-                    x = Cursor.State(1)*cosd(Params.MvmtAxisAngle);
-                    y = Cursor.State(1)*sind(Params.MvmtAxisAngle);
-                    CursorRect([1,3]) = CursorRect([1,3]) + x + Params.Center(1); % add x-pos
-                    CursorRect([2,4]) = CursorRect([2,4]) + y + Params.Center(2); % add y-pos
+%                     CursorRect = Params.CursorRect;
+%                     x = Cursor.State(1)*cosd(Params.MvmtAxisAngle);
+%                     y = Cursor.State(1)*sind(Params.MvmtAxisAngle);
+%                     CursorRect([1,3]) = CursorRect([1,3]) + x + Params.Center(1); % add x-pos
+%                     CursorRect([2,4]) = CursorRect([2,4]) + y + Params.Center(2); % add y-pos
                     Data.CursorState(:,end+1) = Cursor.State;
                     Data.PlanarState(:,end+1) = Params.Arduino.planar.pos(1);
                     Data.IntendedCursorState(:,end+1) = Cursor.IntendedState;
@@ -119,10 +119,10 @@ switch Params.PlanarConnected
                         VelRect([2,4]) = VelRect([2,4]) + Params.Center(2);
                         x0 = mean(VelRect([1,3]));
                         y0 = mean(VelRect([2,4]));
-                        xf = x0 + 0.1*Cursor.Vcommand*cosd(Params.MvmtAxisAngle);
-                        yf = y0 + 0.1*Cursor.Vcommand*sind(Params.MvmtAxisAngle);
+%                         xf = x0 + 0.1*Cursor.Vcommand*cosd(Params.MvmtAxisAngle);
+%                         yf = y0 + 0.1*Cursor.Vcommand*sind(Params.MvmtAxisAngle);
                         Screen('FrameOval', Params.WPTR, [100,100,100], VelRect);
-                        Screen('DrawLine', Params.WPTR, [100,100,100], x0, y0, xf, yf, 3);
+%                         Screen('DrawLine', Params.WPTR, [100,100,100], x0, y0, xf, yf, 3);
                     end
                     
                     % Exo Position
