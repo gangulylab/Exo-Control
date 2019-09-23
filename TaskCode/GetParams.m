@@ -44,10 +44,10 @@ end
 
 if IsWin,
     %projectdir = 'D:\new_planar\Exo-Control';
-%    projectdir ='C:\Users\test\Documents\GitHub\Exo-Control\';
+    projectdir ='C:\Users\test\Documents\GitHub\Exo-Control\';
 %    projectdir = 'C:\new_planar\Exo-Control';
 %    projectdir = 'D:\ganguly_planar\Exo-Control\';
-   projectdir = 'D:\2DPlanar\Exo-Control\';
+%    projectdir = 'D:\2DPlanar\Exo-Control\';
 
 elseif IsOSX,
     projectdir = '/Users/daniel/Projects/Exo-Control/';

@@ -177,7 +177,7 @@ switch Cursor.ControlMode,
         
         % Update KF Params (RML & Adaptation Block)
         if KF.CLDA.Type==3 && TaskFlag==2,
-            KF =  UpdateRmlKF(KF,X,Y,Params,TaskFlag);
+            KF =  UpdateRmlKF(KF,Cursor.IntendedState,Y,Params,TaskFlag);
         end
         
 end
@@ -211,14 +211,28 @@ switch Params.PlanarConnected
         Cursor.State(1) = Params.Arduino.planar.pos(1);
 end
 
-% bound cursor position to size of screen
+% bound cursor position to size of screen/monitor
+if 0
+    pos = Cursor.State(1:2)' + Params.Center;
+    pos(1) = max([pos(1),Params.ScreenRectangle(1)+10]); % x-left
+    pos(1) = min([pos(1),Params.ScreenRectangle(3)-10]); % x-right
+    pos(2) = max([pos(2),Params.ScreenRectangle(2)+10]); % y-left
+    pos(2) = min([pos(2),Params.ScreenRectangle(4)-10]); % y-right
+    Cursor.State(1) = pos(1) - Params.Center(1);
+    Cursor.State(2) = pos(2) - Params.Center(2);
+end
+
+
+% bound cursor position to size of planar Exo
 pos = Cursor.State(1:2)' + Params.Center;
-pos(1) = max([pos(1),Params.ScreenRectangle(1)+10]); % x-left
-pos(1) = min([pos(1),Params.ScreenRectangle(3)-10]); % x-right
-pos(2) = max([pos(2),Params.ScreenRectangle(2)+10]); % y-left
-pos(2) = min([pos(2),Params.ScreenRectangle(4)-10]); % y-right
+pos(1) = max([pos(1),Params.Center(1)-300]); % x-left
+pos(1) = min([pos(1),Params.Center(1)+300]); % x-right
+pos(2) = max([pos(2),Params.Center(2)-150]); % y-left
+pos(2) = min([pos(2),Params.Center(2)+150]); % y-right
 Cursor.State(1) = pos(1) - Params.Center(1);
 Cursor.State(2) = pos(2) - Params.Center(2);
+
+
 
 
 
